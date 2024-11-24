@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Fit/.vs
+/Fit/bin/Debug/net8.0
+/Fit/obj/Debug/net8.0
+/Fit/obj
+/Fit.Tests/bin/Debug/net8.0
+/Fit.Tests/obj
