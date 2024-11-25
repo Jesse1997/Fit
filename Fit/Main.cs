@@ -5,51 +5,38 @@ namespace Fit
     public class Main
     {
         private readonly IConsoleService _consoleService;
+        private readonly ICommandService _commandService;
 
-        public Main(IConsoleService consoleService)
+        public Main(IConsoleService consoleService, ICommandService commandService)
         {
             _consoleService = consoleService;
+            _commandService = commandService;
         }
 
         public void Start()
         {
             string path = GetWorkingDirectoryPathFromUser();
+            _commandService.SetPath(path);
 
             string command;
 
             do
             {
                 command = _consoleService.Read();
-                HandleCommand(path, command);
+                HandleCommand(command);
             }
             while (command != "fit quit");
         }
 
-        public void HandleCommand(string path, string command)
+        public void HandleCommand(string command)
         {
-            if (command != "fit init" && command != "fit quit")
+            if (!_commandService.CommandExists(command) && command != "fit quit")
             {
                 _consoleService.Write($"'{command}' is not an existing command...");
                 return;
             }
 
-            if (command == "fit init")
-            {
-                try
-                {
-                    var createdDirectory = Directory.CreateDirectory(path + "/.fit");
-
-
-                    createdDirectory.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
-
-                    _consoleService.Write(createdDirectory.FullName + " is created");
-                }
-                catch
-                {
-                    _consoleService.Write("Something went wrong trying to create a fit repository");
-                    return;
-                }
-            }
+            _commandService.ExecuteCommand(command);
         }
 
         public string GetWorkingDirectoryPathFromUser()
